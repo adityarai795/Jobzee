@@ -3,7 +3,7 @@ import { Context } from "../../main";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import {deleteApplications,getAllApplicationsEmployer,getAllApplicationsJobSeeker,submitApplication} from "../../api/application";
 
 function MyApplication() {
   const [applications, setApplications] = useState([]);
@@ -15,14 +15,19 @@ function MyApplication() {
   useEffect(() => {
     try {
       if(user && user.role === "Employer"){
-        axios.get("http://localhost:4000/api/v1/application/employer/getall",{withCredentials: true}).then((response) => {  
+        console.log(user);
+        // axios.get("http://localhost:4000/api/v1/application/employer/getall",{withCredentials: true})
+        getAllApplicationsEmployer()
+        .then((response) => {  
+          console.log(response.data.applications);
           setApplications(response.data.applications);
-        }
-        ).catch((error) => {
+        }).catch((error) => {
           toast.error(error.response.data.message);
         });
-      }else{
-        axios.get("http://localhost:4000/api/v1/application/jobseeker/getall",{withCredentials: true}).then((response) => {
+      }else{ 
+        // axios.get("http://localhost:4000/api/v1/application/jobseeker/getall",{withCredentials: true})
+         getAllApplicationsJobSeeker()
+        .then((response) => {
           setApplications(response.data.applications);
         }).catch((error) => {
           toast.error(error.response.data.message);
@@ -39,10 +44,12 @@ function MyApplication() {
   }
   const deleteApplication = (id) => {
     try {
-      axios
-        .delete(`http://localhost:4000/api/v1/application/delete/${id}`, {
-          withCredentials: true,
-        })
+      // axios
+      //   .delete(`http://localhost:4000/api/v1/application/delete/${id}`, {
+      //     withCredentials: true,
+      //   })/
+      const jobId = id;
+        deleteApplications(jobId)
         .then((res) => {
           toast.success(res.data.message);
           setApplications((prevApplication) =>
@@ -90,7 +97,7 @@ function MyApplication() {
               <EmployerCard
                 element={element}
                 key={element._id}
-                openModal={openModal}
+                
               />
             );
           })

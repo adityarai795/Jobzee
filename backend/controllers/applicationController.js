@@ -8,10 +8,11 @@ import cloudinary from "cloudinary";
 export const employergetAllApplications = catchAsyncError(async (req, res, next) => {
   const {role}=req.user;
   if(role ==="Job Seeker"){
-    return next(new ErrorHandler("You are not allowed to post a job", 403));
+    return next(new ErrorHandler("You are not allowed to post a job because you are Job Seeker", 403));
   }
-  const { _id } = req.params;
-  const applications=await ApplicationSchema.find({'employerId':_id});
+  const employerId = req.user._id;
+  const applications = await ApplicationSchema.find({ 'employerId.user': employerId });
+
   res.status(200).json({
     success: true,
     applications,

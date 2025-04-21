@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
-
+import {deleteApplications,getAllApplicationsEmployer,getAllApplicationsJobSeeker,submitApplication} from "../../api/application";
 
 function Application() {
   const [name, setName] = useState("");
@@ -28,16 +28,17 @@ function Application() {
     formData.append("jobId", id);
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:4000/api/v1/application/post",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // const { data } = await axios.post(
+      //   "http://localhost:4000/api/v1/application/post",
+      //   formData,
+      //   {
+      //     withCredentials: true,
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+      const {data}=await submitApplication(formData);
       setName("");
       setEmail("");
       setCoverLetter("");
